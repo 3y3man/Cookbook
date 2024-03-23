@@ -3,7 +3,7 @@ import os
 import requests
 import subprocess
 from flask import Flask, render_template, request
-from helpers import get_full_recipe, extract_ingredient_names
+from helpers import extract_ingredient_names, search_recipes_complex
 from identify import identifier
 from ultralytics import YOLO
 from werkzeug.utils import secure_filename
@@ -35,7 +35,8 @@ def whats_in_my_fridge():
             # Extract the detected ingredients from the output
             ingredients = extract_ingredient_names(output)
             # get recipies 
-            recipes = get_full_recipe(ingredients)  
+            if ingredients:
+                recipes = search_recipes_complex(ingredients=ingredients)
             # print(recipes)
             # Process your output here
             return render_template('results.html', recipes=recipes, ingredients=ingredients)

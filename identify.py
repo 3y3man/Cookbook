@@ -1,7 +1,6 @@
 # Import libraries and helper functions
 import subprocess
 from ultralytics import YOLO
-from helpers import get_full_recipe, extract_ingredient_names
 
 # Setup model and image
 # image_path = "foods1.jpg"
