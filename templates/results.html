@@ -1,0 +1,33 @@
+<h2>Ingredients identified</h2>
+    {% if ingredients %}
+    <ul>
+    {% for ingredient in ingredients %}
+    <li>{{ ingredient }}</li>
+    {% endfor %}
+    </ul>
+    {% else %}
+    <p>No ingredients identified.</p>
+    {% endif %}
+<h2>Recipes:</h2>
+    {% if recipes %}
+    {% for recipe in recipes %}
+        <h2>{{ recipe.title }}</h2>
+        <p>{{ recipe.servings }} servings</p>
+        <p>{{ recipe.time }} minutes</p>
+        <img src="{{ recipe.image }}" alt="{{ recipe.image }}">
+        <p>Ingredients: </p> 
+            <ul id="ingredients">
+            {% for ingredient in recipe.ingredients %}
+                <li>{{ ingredient }}</li>
+            {% endfor %}
+            </ul>
+        <p>Steps: </p> 
+            <ol id="steps">
+            {% for step in recipe.steps %}
+                <li>{{ step }}</li>
+            {% endfor %}
+            </ol>
+    {% endfor %}
+    {% else %}
+        <p>No recipes found</p>
+    {% endif %}
