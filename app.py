@@ -2,7 +2,7 @@
 import os
 import requests
 import subprocess
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 from helpers import extract_ingredient_names, search_complex_recipe, identifier
 from ultralytics import YOLO
 from werkzeug.utils import secure_filename
@@ -31,12 +31,14 @@ def complex_search():
             file.save(filepath)
             # predict the image file
             output = identifier(filepath)
+            print(output)
             # Extract the detected ingredients from the output
             ingredients = extract_ingredient_names(output)
             # get recipies 
             if ingredients:
                 recipes = search_complex_recipe(ingredients=ingredients)
-            # print(recipes)
+                recipes = jsonify(recipes)
+            print(recipes)
             # Process your output here
             return render_template('results.html', recipes=recipes, ingredients=ingredients)
     return render_template('index.html')

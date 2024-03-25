@@ -126,6 +126,6 @@ def search_complex_recipe(number_of_results=5, ingredients=None, query=None,
         return f"Error: {response.status_code}"
 
 
-# request = search_recipes_complex(api_key, cuisine=['African'])
+# request = search_complex_recipe(api_key, cuisine=['African'])
 # for recipe in request:
 #     print(recipe)
