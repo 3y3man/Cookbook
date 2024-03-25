@@ -1,8 +1,29 @@
 # Import libraries
+import os
 import re
 import requests
+import subprocess
 
-api_key = "d6bb3784b92440028ff33bee93a5b58c"
+from keys import Global_Variables
+from ultralytics import YOLO
+
+# Setup model and image
+globalVar = Global_Variables()
+# image_path = "static/foods1.jpg"
+best_model = globalVar.obj_model
+# Global variables api_key
+api_key = globalVar.RECIPE_API
+# print(api_key)
+
+# function to run a cli prediction on a given image
+def identifier(img):
+      # CLI for inference
+      cmd = f"yolo task=detect mode=predict model={best_model} conf=0.25 source={img} save=False"
+
+      # Run the inference command and capture the output
+      result = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True, text=True)
+      
+      return result.stderr
 
 
 # Extract identified ingredients from a terminal output
@@ -21,7 +42,7 @@ def extract_ingredient_names(yolov8_output):
     return ingredients
 
 # Main function that calls for a complex search for recipes from Spoonacular API
-def search_recipes_complex(number_of_results=5, ingredients=None, query=None, 
+def search_complex_recipe(number_of_results=5, ingredients=None, query=None, 
                            diet=None, cuisine=None, excludeCuisine=None, intolerances=None, 
                            equipment=None, excludeIngredients=None, type=None, 
                            addRecipeNutrition=False, tags=None):
