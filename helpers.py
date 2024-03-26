@@ -13,7 +13,7 @@ globalVar = Global_Variables()
 best_model = globalVar.obj_model
 # Global variables api_key
 api_key = globalVar.RECIPE_API
-# print(api_key)
+
 
 # function to run a cli prediction on a given image
 def identifier(img):
@@ -23,7 +23,7 @@ def identifier(img):
       # Run the inference command and capture the output
       result = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True, text=True)
       
-      return result.stderr
+      return result.stderr if result.stderr is not None else None
 
 
 # Extract identified ingredients from a terminal output
@@ -39,10 +39,10 @@ def extract_ingredient_names(yolov8_output):
     
     # Clean up ingredient names (remove potential plural 's' and extra spaces)
     ingredients = [match.rstrip('s ').strip() for match in matches]
-    return ingredients
+    return ingredients if ingredients else None
 
 # Main function that calls for a complex search for recipes from Spoonacular API
-def search_complex_recipe(number_of_results=5, ingredients=None, query=None, 
+def search_complex_recipe(apiKey=api_key, number_of_results=6, force_ingredients=None, query=None, 
                            diet=None, cuisine=None, excludeCuisine=None, intolerances=None, 
                            equipment=None, excludeIngredients=None, type=None, 
                            addRecipeNutrition=False, tags=None):
@@ -70,16 +70,18 @@ def search_complex_recipe(number_of_results=5, ingredients=None, query=None,
     """
     url = "https://api.spoonacular.com/recipes/complexSearch"
     params = {
-        "apiKey": api_key,
+        "apiKey": apiKey,
         "number": number_of_results,
         "addRecipeInformation": True,  # Include detailed recipe information
         "fillIngredients": True,  # Include used and missing ingredients
         "instructionsRequired": True,  # Ensure recipes have instructions
     }
-
+    # print("API: " + api_key)
+    # print(url)
+    # print(params)
     # Optional parameters
-    if ingredients:
-        params["includeIngredients"] = '|'.join(ingredients)
+    if force_ingredients:
+        params["includeIngredients"] = ','.join(force_ingredients)
     if query:
         params["query"] = query
     if diet:
@@ -101,9 +103,17 @@ def search_complex_recipe(number_of_results=5, ingredients=None, query=None,
     if tags:
         params["tags"] = tags
 
+    # print(url)
+    
     response = requests.get(url, params=params)
+    print("Response: ")
+    print(response.status_code)
+    # print(response)
     if response.status_code == 200:
         recipes_data = response.json()["results"]
+        # recipes_data = response.json()
+        # print("recipes_data: ")
+        # print(recipes_data)
         recipes = []
         for recipe in recipes_data:
             recipes.append({
@@ -120,8 +130,11 @@ def search_complex_recipe(number_of_results=5, ingredients=None, query=None,
                 "cuisine": recipe["cuisines"],
                 "dishTypes": recipe["dishTypes"],
                 "intolerances": intolerances,
+                "author": recipe["creditsText"],
+                "description": recipe["summary"],
             })
-        return recipes
+        # print(recipes)
+        return recipes if recipes else None
     else:
         return f"Error: {response.status_code}"
 
@@ -129,3 +142,7 @@ def search_complex_recipe(number_of_results=5, ingredients=None, query=None,
 # request = search_recipes_complex(api_key, cuisine=['African'])
 # for recipe in request:
 #     print(recipe)
+
+# ingredients = ['carrot', 'cucumber', 'eggplant', 'white radish']
+# recipes = search_complex_recipe()
+# recipes

@@ -4,3 +4,4 @@ Werkzeug==3.0.0
 torch==2.2.0
 torchvision==0.17.0
 ultralytics==8.0.196
+requests-mock==1.11.0

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo</title>
+</head>
+<body>
+    <form method="post" action="/" enctype="multipart/form-data">
+        <label for="file">Image</label>
+        <input id="file" name="file" type="file" />
+        <button>Identify</button>
+      </form>
+    <!-- <h2>Ingredients:</h2>
+    <p id="ingredients"></p> -->
+    <!-- <h2>Instructions:</h2> -->
+    <!-- <p id="instructions"></p> -->
+    <!-- <h2>Recipes:</h2>
+    {% if recipe %}
+    {% for recipe in recipes %}
+        <h2>{{ recipe.title }}</h2>>
+        <p>{{ recipe.servings }} servings</p>
+        <p>{{ recipe.time }} minutes</p>
+        <img src="{{ recipe.image }}" alt="food image">
+        <p>Ingredients: </p> 
+            <ul id="ingredients">
+            {% for ingredient in recipe.ingredients %}
+                <li>{{ ingredient }}</li>
+            {% endfor %}
+            </ul>
+        </p>
+        <p>Steps: </p> 
+            <ul id="steps">
+            {% for step in recipe.steps %}
+                <li>{{ step }}</li>
+            {% endfor %}
+            </ul>
+        </p>
+    {% endfor %}
+    {% else %}
+        <p>No recipes found</p>
+    {% endif %} -->
+</body>
+</html>

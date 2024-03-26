@@ -1,8 +1,9 @@
 # Import libraries and helper functions
+import json
 import os
 import requests
 import subprocess
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 from helpers import extract_ingredient_names, search_complex_recipe, identifier
 from ultralytics import YOLO
 from werkzeug.utils import secure_filename
@@ -17,26 +18,52 @@ app.config["TEMPLATES_AUTO_RELOAD"] = True
 @app.route('/', methods=['GET', 'POST'])
 def complex_search():
     if request.method == 'POST':
-        # Check if the post request has the file part
-        if 'file' not in request.files:
-            return 'No file part'
-        file = request.files['file']
-        # If the user does not select a file, the browser submits an
-        # empty file without a filename.
-        if file.filename == '':
-            return 'No selected file'
-        if file:
+        # Initialize a dictionary to hold parameters for search_complex_recipe
+        print("We got here")
+        params = {}
+        ingredients = None
+        # Extract query text input (if provided)
+        query = request.form.get('query')
+        if query:
+            params['query'] = query
+        
+        # Process file upload (if provided)
+        file = request.files.get('file')
+        # print(file, file.filename)
+        # file = request.files['file']
+        if file and file.filename != '':
             filename = secure_filename(file.filename)
             filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
             file.save(filepath)
-            # predict the image file
+            
+            # Process the file through identifier to get ingredients
             output = identifier(filepath)
+            print("identified")
+            if output is None:
+                return jsonify({"error": "Could not run the file: " + filename})
+            # print(output)
+            
             # Extract the detected ingredients from the output
             ingredients = extract_ingredient_names(output)
-            # get recipies 
             if ingredients:
-                recipes = search_complex_recipe(ingredients=ingredients)
-            # print(recipes)
-            # Process your output here
-            return render_template('results.html', recipes=recipes, ingredients=ingredients)
+                params['force_ingredients'] = ingredients
+
+        # Add additional form parameters to params as needed
+        # For example, if you have a dietary restriction input:
+        # diet = request.form.get('diet')
+        # if diet:
+        #     params['diet'] = diet.split(',')  # Assuming multiple diets can be separated by commas
+        
+        # Now call search_complex_recipe with dynamic params
+        recipes = search_complex_recipe(**params)
+        
+        if recipes:
+            # recipes = json.dumps(recipes)
+            return jsonify({"ingredients_found": ingredients, "recipes": recipes}) if ingredients else jsonify({"recipes": recipes})
+
+        else:
+            return jsonify({"error": "No recipes found"})
+        print(recipes)
+        # Process your output here
+        return render_template('results.html', recipes=recipes, ingredients=ingredients)
     return render_template('index.html')
