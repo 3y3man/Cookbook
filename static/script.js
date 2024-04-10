@@ -4,12 +4,13 @@ document.querySelector('form').addEventListener('submit', function(e) {
 
 
     // Switch to the loading spinner button
+    // search_button = document.getElementById('searchButton')
+    // loading_spinner = document.getElementById('loadingButton')
+
     // document.getElementById('searchButton').hidden = true; // Hide search button
     // document.getElementById('loadingButton').hidden = false; // Show loading button
     // document.getElementById('searchButton').classList.add('visually-hidden');
-    document.getElementById('loadingButton').classList.remove('visually-hidden');
-    document.getElementById('searchButton').disabled = true; // Disable button just for clarity
-
+    
     // Prepare FormData with inputs for file and text
     var formData = new FormData(this);
     
@@ -23,6 +24,10 @@ document.querySelector('form').addEventListener('submit', function(e) {
     })
     .then(response => response.json()) // Parse JSON response
     .then(data => {
+        document.getElementById('loadingButton').hidden = false; // Hide loading button
+        document.getElementById('searchButton').classList.remove('btn-outline-danger');
+        document.getElementById('searchButton').classList.add('btn-danger');
+        document.getElementById('searchButton').disabled = true; // Disable button just for clarity
         // Here, 'data' is the JSON object returned from the server
         // Construct the HTML for results
         let resultHtml = '';
@@ -91,13 +96,22 @@ document.querySelector('form').addEventListener('submit', function(e) {
         // Switch back to the search button after processing
         // document.getElementById('loadingButton').hidden = true; // Hide loading button
         // document.getElementById('searchButton').hidden = false; // Show search button
-        document.getElementById('loadingButton').classList.add('visually-hidden');
-        document.getElementById('searchButton').disabled = false; // Re-enable button just for clarity
+        // document.getElementById('loadingButton').classList.add('visually-hidden');
+        // document.getElementById('searchButton').disabled = false; // Re-enable button just for clarity
         // document.getElementById('searchButton').classList.remove('visually-hidden');
+        // document.getElementById('loadingButton').classList.add('visually-hidden');
+        document.getElementById('loadingButton').hidden = true; // Hide loading button
+        document.getElementById('searchButton').classList.add('btn-outline-danger');
+        document.getElementById('searchButton').classList.remove('btn-danger');
+        document.getElementById('searchButton').disabled = false; // Disable button just for clarity
     })
     .catch(error => console.error('Error:', error)); // Handle errors
     // Switch back to the search button if there's an error
-    document.getElementById('loadingButton').classList.add('visually-hidden');
-    document.getElementById('searchButton').disabled = false; // Re-enable button just for clarity
+    // document.getElementById('loadingButton').classList.add('visually-hidden');
+    // document.getElementById('searchButton').disabled = false; // Re-enable button just for clarity
         // document.getElementById('searchButton').classList.remove('visually-hidden');
+        document.getElementById('loadingButton').hidden = true; // Hide loading button
+        document.getElementById('searchButton').classList.add('btn-outline-danger');
+    document.getElementById('searchButton').classList.remove('btn-danger');
+    document.getElementById('searchButton').disabled = false;
 });

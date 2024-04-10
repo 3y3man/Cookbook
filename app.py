@@ -19,7 +19,7 @@ app.config["TEMPLATES_AUTO_RELOAD"] = True
 def complex_search():
     if request.method == 'POST':
         # Initialize a dictionary to hold parameters for search_complex_recipe
-        print("We got here")
+        # print("We got here")
         params = {}
         ingredients = None
         # Extract query text input (if provided)
@@ -38,7 +38,7 @@ def complex_search():
             
             # Process the file through identifier to get ingredients
             output = identifier(filepath)
-            print("identified")
+            # print("identified")
             if output is None:
                 return jsonify({"error": "Could not run the file: " + filename})
             # print(output)
