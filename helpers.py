@@ -1,8 +1,11 @@
 # Import libraries
+import inflect
 import os
+import pandas as pd
 import re
 import requests
 import subprocess
+import spacy
 
 from keys import Global_Variables
 from ultralytics import YOLO
@@ -13,6 +16,37 @@ globalVar = Global_Variables()
 best_model = globalVar.obj_model
 # Global variables api_key
 api_key = globalVar.RECIPE_API
+
+# Load the spaCy model
+nlp = spacy.load("en_core_web_sm")
+p = inflect.engine()
+
+# Define lists for cuisines, intolerances, meal types, and diets
+cuisines_list = ["African", "Asian", "American", "British", "Cajun", "Caribbean", "Chinese", 
+                 "Eastern European", "European", "French", "German", "Greek", "Indian", 
+                 "Irish", "Italian", "Japanese", "Jewish", "Korean", "Latin American", 
+                 "Mediterranean", "Mexican", "Middle Eastern", "Nordic", "Southern", 
+                 "Spanish", "Thai", "Vietnamese"]
+
+intolerances_list = ["Dairy", "Egg", "Gluten", "Grain", "Peanut", "Seafood", "Sesame",
+                     "Shellfish", "Soy", "Sulfite", "Tree Nut", "Wheat"]
+
+meal_types_list = ["main course", "side dish", "dessert", "appetizer", "salad", "bread",
+                   "breakfast", "soup", "beverage", "sauce", "marinade", "fingerfood",
+                   "snack", "drink"]
+
+diets_list = ["Gluten Free", "Ketogenic", "Vegetarian", "Lacto-vegetarian", "Ovo-vegetarian",
+              "Vegan", "Pescetarian", "Paleo", "Primal", "Low FODMAP", "Whole30"]
+
+exclusion_keywords = ["allergic", "remove", "exclude", "no", "without"]
+
+# Load the CSV file, specifying no headers and the correct delimiter
+file_path = 'static/top-1k-ingredients.csv'
+ingredients_data = pd.read_csv(file_path, header=None, delimiter=';')
+
+# Extract only the first column, which contains the ingredient names
+ingredients_list = ingredients_data[0].tolist()
+singular_ingredients = {p.singular_noun(ing) or ing for ing in ingredients_list}
 
 
 # function to run a cli prediction on a given image
@@ -139,10 +173,73 @@ def search_complex_recipe(apiKey=api_key, number_of_results=6, force_ingredients
         return f"Error: {response.status_code}"
 
 
-# request = search_recipes_complex(api_key, cuisine=['African'])
-# for recipe in request:
-#     print(recipe)
+def process_command(text):
+    # Process the text
+    doc = nlp(text)
 
-# ingredients = ['carrot', 'cucumber', 'eggplant', 'white radish']
-# recipes = search_complex_recipe()
-# recipes
+    # Track whether 'allergic' has been encountered
+    # past_allergic = False
+
+    # Initialize lists to hold extracted information
+    params = {}
+    ingredients_to_include = []
+    ingredients_to_exclude = []
+    extracted_cuisines = []
+    extracted_meal_types = []
+    extracted_diets = []
+    extracted_intolerances = []
+
+    # Flags to determine context based on exclusion keywords
+    exclude_context = False
+
+    # Iterate over tokens
+    for token in doc:
+        word = token.text
+        if not word.strip():
+            pass
+        else:
+            word = p.singular_noun(word) or word
+        lower_word = word.lower()
+
+        # Check if current token indicates an exclusion or allergy context
+        if lower_word in exclusion_keywords:
+            exclude_context = True
+            continue
+
+        # Check against predefined lists and classify ingredients
+        if word in cuisines_list:
+            extracted_cuisines.append(word)
+        elif word in intolerances_list:
+            extracted_intolerances.append(word)
+        elif lower_word in meal_types_list:
+            extracted_meal_types.append(lower_word)
+        elif word in diets_list:
+            extracted_diets.append(word)
+        elif word in singular_ingredients:  # Check if the word is in the ingredients list
+            if exclude_context:
+                # Further check if it's a known allergen
+                if word in intolerances_list:
+                    ingredients_to_exclude.append(word)  # Treat as a specific intolerance/allergen
+                else:
+                    ingredients_to_exclude.append(word)  # General exclusion
+            else:
+                ingredients_to_include.append(word)
+
+    if ingredients_to_include:
+        params["query"] = ','.join(ingredients_to_include)
+    if extracted_diets:
+        params["diet"] = ','.join(extracted_diets)
+    if extracted_cuisines:
+        params["cuisine"] = extracted_cuisines[0]
+    if ingredients_to_exclude:
+        params["excludeIngredients"] = ','.join(ingredients_to_exclude)
+    if extracted_meal_types:
+        params["type"] = extracted_meal_types[0]
+    
+    # print("Cuisines:", extracted_cuisines)
+    # print("Meal Types:", extracted_meal_types)
+    # print("Diets:", extracted_diets)
+    # print("Ingredients to Include:", ingredients_to_include)
+    # print("Ingredients to Exclude:", ingredients_to_exclude)
+    
+    return params, ingredients_to_include if ingredients_to_include else None

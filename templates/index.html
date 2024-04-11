@@ -802,7 +802,7 @@ z"/>
         <form class="input-group search-bar" role="search" method="post" enctype="multipart/form-data">
           <div class="input-group">
           <input class="form-control me" type="search" placeholder="Search.." aria-label="Search" name="query" id="query" >
-          <button type="button" class="btn btn-outline-success me-2" name="mic" id="start-voice-input">
+          <button type="button" class="btn btn-outline-success me-2 mic" name="mic" id="mic">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-mic" viewBox="0 0 16 16">
               <path d="M3.5 6.5A.5.5 0 0 1 4 7v1a4 4 0 0 0 8 0V7a.5.5 0 0 1 1 0v1a5 5 0 0 1-4.5 4.975V15h3a.5.5 0 0 1 0 1h-7a.5.5 0 0 1 0-1h3v-2.025A5 5 0 0 1 3 8V7a.5.5 0 0 1 .5-.5"></path>
               <path d="M10 8a2 2 0 1 1-4 0V3a2 2 0 1 1 4 0zM8 0a3 3 0 0 0-3 3v5a3 3 0 0 0 6 0V3a3 3 0 0 0-3-3"></path>
@@ -810,13 +810,17 @@ z"/>
             <span class="visually-hidden">Speak</span>
           </button>
           <input type="file" class="form-control me-2" id="file" name="file" accept="image/*, video/*">
-          <!-- <button class="btn btn-success visually-hidden" type="submit" id="loadingButton">
-            <span class="spinner-border spinner-border-sm"  aria-hidden="true"></span>
+          <!-- <button class="btn btn-success spinner visually-hidden" type="submit" id="loadingButton">
+            
             <span role="status">Loading...</span>
           </button> -->
-          <button class="btn btn-outline-danger" type="submit" id="searchButton">
-            <span class="spinner-border spinner-border-sm" id="loadingButton" aria-hidden="true" hidden></span>
-            <span role="status">Search</span>
+          <button 
+              class="btn btn-outline-danger search-button" 
+              type="submit" 
+              id="searchButton"
+          >
+          <span class="spinner-border spinner-border-sm spinner visually-hidden"  aria-hidden="true"></span>
+          <span role="status" class="status">Search</span>
           </button>
         </form>
       </div>

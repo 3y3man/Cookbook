@@ -3,8 +3,9 @@ import json
 import os
 import requests
 import subprocess
+import whisper
 from flask import Flask, render_template, request, jsonify
-from helpers import extract_ingredient_names, search_complex_recipe, identifier
+from helpers import extract_ingredient_names, search_complex_recipe, identifier, process_command
 from ultralytics import YOLO
 from werkzeug.utils import secure_filename
 
@@ -14,6 +15,8 @@ app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'uploads/'
 # Ensure templates are auto-reloaded
 app.config["TEMPLATES_AUTO_RELOAD"] = True
+
+model = whisper.load_model("base.en") 
 
 @app.route('/', methods=['GET', 'POST'])
 def complex_search():
@@ -67,3 +70,22 @@ def complex_search():
         # Process your output here
         return render_template('results.html', recipes=recipes, ingredients=ingredients)
     return render_template('index.html')
+
+@app.route('/audio', methods=['POST'])
+def handle_audio():
+    audio_file = request.files['audio']
+    audio_file.save("temp.wav")  # Save the received audio file
+    result = model.transcribe("temp.wav")  # Transcribe the audio
+    text = result['text']
+    # print(text)
+    params, ingredients = process_command(text)
+    if params:
+        recipes= search_complex_recipe(**params)
+        # print("params: ")
+        # print(params)
+        # print(recipes)
+        if recipes:
+            # recipes = json.dumps(recipes)
+            return jsonify({"ingredients_found": ingredients, "recipes": recipes}) if ingredients else jsonify({"recipes": recipes})
+        else:
+            return jsonify({"error": "No recipes found"})
