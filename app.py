@@ -77,7 +77,7 @@ def handle_audio():
     audio_file.save("temp.wav")  # Save the received audio file
     result = model.transcribe("temp.wav")  # Transcribe the audio
     text = result['text']
-    # print(text)
+    print(text)
     params, ingredients = process_command(text)
     if params:
         recipes= search_complex_recipe(**params)

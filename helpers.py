@@ -140,8 +140,8 @@ def search_complex_recipe(apiKey=api_key, number_of_results=6, force_ingredients
     # print(url)
     
     response = requests.get(url, params=params)
-    print("Response: ")
-    print(response.status_code)
+    # print("Response: ")
+    # print(response.status_code)
     # print(response)
     if response.status_code == 200:
         recipes_data = response.json()["results"]
@@ -236,10 +236,10 @@ def process_command(text):
     if extracted_meal_types:
         params["type"] = extracted_meal_types[0]
     
-    # print("Cuisines:", extracted_cuisines)
-    # print("Meal Types:", extracted_meal_types)
-    # print("Diets:", extracted_diets)
-    # print("Ingredients to Include:", ingredients_to_include)
-    # print("Ingredients to Exclude:", ingredients_to_exclude)
+    print("Cuisines:", extracted_cuisines)
+    print("Meal Types:", extracted_meal_types)
+    print("Diets:", extracted_diets)
+    print("Ingredients to Include:", ingredients_to_include)
+    print("Ingredients to Exclude:", ingredients_to_exclude)
     
     return params, ingredients_to_include if ingredients_to_include else None
