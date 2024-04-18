@@ -14,22 +14,9 @@ document.querySelector('form').addEventListener('submit', function(e) {
     btn.classList.add('btn-danger')
     btn.classList.add('disabled')
     stat.innerHTML = 'Loading...'
-    // loading_spinner = document.getElementById('loadingButton')
-
-    // document.getElementById('searchButton').hidden = true; // Hide search button
-    // document.getElementById('loadingButton').hidden = false; // Show loading button
-    // document.getElementById('searchButton').classList.add('visually-hidden');
-    
-    // document.getElementById('loadingButton').hidden = false; // Hide loading button
-    // document.getElementById('searchButton').classList.remove('btn-outline-danger');
-    // document.getElementById('searchButton').classList.add('btn-danger');
-    // document.getElementById('searchButton').disabled = true; // Disable button just for clarity
 
     // Prepare FormData with inputs for file and text
     var formData = new FormData(this);
-    
-    // Optional: Add additional data to formData if needed
-    // formData.append('otherField', 'value');
 
     // Make an AJAX request to the server
     fetch('/', { // Make sure this URL matches your Flask route
@@ -55,7 +42,6 @@ document.querySelector('form').addEventListener('submit', function(e) {
         ingredientsHtml += "</ul></div>";
 
         if (data.recipes) {
-            // recipesHtml += "<div class='row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3'>";
             data.recipes.forEach(recipe => {
                 recipesHtml += `<div class="col">
                     <div class="card shadow-sm">
@@ -103,17 +89,6 @@ document.querySelector('form').addEventListener('submit', function(e) {
         resultHtml += ingredientsHtml + recipesHtml;
         document.getElementById('results').innerHTML = resultHtml;
 
-        // Switch back to the search button after processing
-        // document.getElementById('loadingButton').hidden = true; // Hide loading button
-        // document.getElementById('searchButton').hidden = false; // Show search button
-        // document.getElementById('loadingButton').classList.add('visually-hidden');
-        // document.getElementById('searchButton').disabled = false; // Re-enable button just for clarity
-        // document.getElementById('searchButton').classList.remove('visually-hidden');
-        // document.getElementById('loadingButton').classList.add('visually-hidden');
-        // document.getElementById('loadingButton').hidden = true; // Hide loading button
-        // document.getElementById('searchButton').classList.add('btn-outline-danger');
-        // document.getElementById('searchButton').classList.remove('btn-danger');
-        // document.getElementById('searchButton').disabled = false; // Disable button just for clarity
         spinner.classList.add('visually-hidden')
         btn.classList.remove('btn-danger')
         btn.classList.add('btn-outline-danger')
@@ -121,25 +96,9 @@ document.querySelector('form').addEventListener('submit', function(e) {
         stat.innerHTML = 'Search'
     })
     .catch(error => console.error('Error:', error)); // Handle errors
-    // Switch back to the search button if there's an error
-    // document.getElementById('loadingButton').classList.add('visually-hidden');
-    // document.getElementById('searchButton').disabled = false; // Re-enable button just for clarity
-        // document.getElementById('searchButton').classList.remove('visually-hidden');
-    //     document.getElementById('loadingButton').hidden = true; // Hide loading button
-    //     document.getElementById('searchButton').classList.add('btn-outline-danger');
-    // document.getElementById('searchButton').classList.remove('btn-danger');
-    // document.getElementById('searchButton').disabled = false;
-
-    // search_button.innerHTML = 'Search';
     
 });
 
-// Add event listener for mic button
-// document.querySelector('.mic').addEventListener('click', function (event) {
-
-//     mic.classList.remove('btn-outline-success');
-//     mic.classList.add('btn-success');
-// });
 
 const recordBtn = document.getElementById('mic');
 let mediaRecorder;

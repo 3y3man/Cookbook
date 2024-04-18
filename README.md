@@ -62,5 +62,11 @@ We welcome contributions to the Food Recommender Application! If you have sugges
 
 ---
 
-Created by Ayman Bukar
+Created by; 
+Ayman Bukar
+Sandip Prasai
+Luckson Musonda
+Ritesh
+Jansheer Singh
+
 Project Start Date: 20th January, 2024
