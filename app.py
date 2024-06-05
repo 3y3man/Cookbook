@@ -9,7 +9,7 @@ from helpers import extract_ingredient_names, search_complex_recipe, identifier,
 from ultralytics import YOLO
 from werkzeug.utils import secure_filename
 
-# configure aplication
+# configure aplication``
 app = Flask(__name__)
 # Temporary directory to store uploaded images
 app.config['UPLOAD_FOLDER'] = 'uploads/'
