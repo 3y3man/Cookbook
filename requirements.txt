@@ -6,4 +6,7 @@ torchvision==0.17.0
 ultralytics==8.0.196
 requests-mock==1.11.0
 gunicorn
-whisper
+openai-whisper
+inflect
+spacy>=2.2.0
+https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.2.0/en_core_web_sm-2.2.0.tar.gz#egg=en_core_web_sm
