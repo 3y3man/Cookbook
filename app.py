@@ -86,3 +86,7 @@ def handle_audio():
             return jsonify({"ingredients_found": ingredients, "recipes": recipes}) if ingredients else jsonify({"recipes": recipes})
         else:
             return jsonify({"error": "No recipes found"})
+        
+        
+if __name__ == '__main__':
+    app.run(debug=True)
