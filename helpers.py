@@ -18,14 +18,7 @@ best_model = globalVar.obj_model
 api_key = globalVar.RECIPE_API
 
 # Load the spaCy model
-try:
-    nlp = spacy.load("en_core_web_sm")
-except:
-    print("Downloading spaCy NLP model...")
-    print("This may take a few minutes and it's a one-time process...")
-    os.system(
-        "pip install https://huggingface.co/spacy/en_core_web_sm/resolve/main/en_core_web_sm-any-py3-none-any.whl")
-    nlp = spacy.load("en_core_web_sm")
+nlp = spacy.load("en_core_web_sm")
 p = inflect.engine()
 
 # Define lists for cuisines, intolerances, meal types, and diets
