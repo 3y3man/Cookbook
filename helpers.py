@@ -1,6 +1,5 @@
 # Import libraries
 import inflect
-import os
 import pandas as pd
 import re
 import requests

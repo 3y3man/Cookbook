@@ -1,8 +1,5 @@
 # Import libraries and helper functions
-import json
 import os
-import requests
-import subprocess
 import whisper
 from flask import Flask, render_template, request, jsonify
 from helpers import extract_ingredient_names, search_complex_recipe, identifier, process_command
